@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 import WebViewBridge from 'react-native-webview-bridge-updated';
 import {InjectedMessageHandler} from './WebviewMessageHandler';
 import {actions, messages} from './const';
-import {Modal, View, Text, StyleSheet, TextInput, TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions} from 'react-native';
+import {Modal, View, Text, StyleSheet, TextInput,
+  TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions} from 'react-native';
 
 const injectScript = `
   (function () {
@@ -42,6 +43,7 @@ export default class RichTextEditor extends Component {
     this.state = {
       selectionChangeListeners: [],
       onChange: [],
+      onTitleChange: [],
       showLinkDialog: false,
       showImageDialog: false,
       linkInitialUrl: '',
@@ -185,10 +187,15 @@ export default class RichTextEditor extends Component {
           break;
         }
         case messages.CONTENT_CHANGE: {
-          const content = message.data.content;
-          this.state.onChange.map((listener) => listener(content));
+          this.state.onChange.map((listener) => listener(message.data.content));
           break;
         }
+
+        case messages.TITLE_CHANGE: {
+          this.state.onTitleChange.map((listener) => listener(message.data.content));
+          break;
+        }
+
         case messages.SELECTED_TEXT_CHANGED: {
           const selectedText = message.data;
           this._selectedTextChangeListeners.forEach((listener) => {
@@ -432,7 +439,13 @@ export default class RichTextEditor extends Component {
   registerContentChangeListener(listener) {
     this.setState({
       onChange: [...this.state.onChange, listener]
-  });
+    });
+  }
+
+  registerTitleChangeListener(listener) {
+    this.setState({
+      onTitleChange: [...this.state.onTitleChange, listener]
+    });
   }
 
   setTitleHTML(html) {
