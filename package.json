@@ -2,10 +2,10 @@
   "name": "react-native-zss-rich-text-editor",
   "repository": {
     "type": "git",
-    "url": "https://github.com/wix/react-native-zss-rich-text-editor.git"
+    "url": "https://github.com/GrioSF/react-native-zss-rich-text-editor.git"
   },
-  "version": "1.1.0",
-  "description": "React Native Wrapper for ZSSRichTextEditor",
+  "version": "1.1.1",
+  "description": "React Native Wrapper for ZSSRichTextEditor - Grio Fork",
   "main": "index.js",
   "license": "SEE LICENSE IN LICENSE",
   "dependencies": {
