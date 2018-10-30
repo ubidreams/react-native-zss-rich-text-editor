@@ -464,7 +464,7 @@
                   delimiter = ']>';
                   matched = true;
                 } else if (comment.indexOf('<!--') === 0) { // <!-- comment ...
-						delimiter = '-->';
+                  delimiter = '-->';
                   matched = true;
                 }
               }
@@ -990,7 +990,6 @@
         WebViewBridge.send(JSON.stringify({type: 'LOG', data: msg}));
       }
 
-
       zss_editor.setScrollPosition = function() {
         var position = window.pageYOffset;
         WebViewBridge.send(JSON.stringify({type: 'SCROLL', data: position}));
@@ -1048,6 +1047,20 @@
       }
 
       zss_editor.getCaretYPosition = function() {
+        // iOS
+        if (zss_editor.platform === 'ios') {
+          var sel = window.getSelection();
+          // Next line is comented to prevent deselecting selection. It looks like work but if there are any issues will appear then uconmment it as well as code above.
+          //sel.collapseToStart();
+          var range = sel.getRangeAt(0);
+          var span = document.createElement('span');// something happening here preventing selection of elements
+          range.collapse(false);
+          range.insertNode(span);
+          var topPosition = span.offsetTop;
+          span.parentNode.removeChild(span);
+          return topPosition;
+        }
+        // Android
         var selection = window.getSelection();
         var range = selection.getRangeAt(0);
         var container = range.endContainer;
@@ -1434,6 +1447,8 @@
         setHTML('zss_editor_content', html);
         if ($('#zss_editor_title').is(":hidden")) {
           zss_editor.focusEditor('zss_editor_content');
+          $('#zss_editor_content').scrollTop($('#zss_editor_content')[0].scrollHeight);
+          $('html, body').scrollTop($(document).height());
         }
       }
 
@@ -1580,6 +1595,7 @@
           if (nodeName == 'blockquote') {
             items.push('indent');
           }
+
           // Image
           if (nodeName == 'img') {
             zss_editor.currentEditingImage = t;
@@ -1640,16 +1656,7 @@
       }
 
       zss_editor.setCustomCSS = function(customCSS) {
-
         document.getElementsByTagName('style')[1].innerHTML=customCSS;
-
-        //set focus
-        /*editor.focusout(function(){
-         var element = $(this);
-         if (!element.text().trim().length) {
-         element.empty();
-         }
-         });*/
       }
 
       function addFocusEvent(editorId, callbackHandler) {
@@ -1725,8 +1732,7 @@
             font-family: 'ITCAvantGardePro-Md', 'Roboto', 'Arial', 'Helvetica', sans-serif;
             color: #000;
             width: 100%;
-            /* TODO: inject configurable height */
-            height: 400px;
+            height: 100%;
             -webkit-overflow-scrolling: touch;
             overflow:auto;
         }
