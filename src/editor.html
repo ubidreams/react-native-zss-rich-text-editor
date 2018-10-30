@@ -917,7 +917,7 @@
         whenPastingInsertAsPlainText('zss_editor_title');
         whenPastingInsertAsPlainText('zss_editor_content');
 
-        zss_editor.hideTitle();
+        // zss_editor.hideTitle();
 
         setTimeout(function() {
           WebViewBridge.send(JSON.stringify({type: 'ZSS_INITIALIZED'}))
@@ -1432,7 +1432,9 @@
 
       zss_editor.setContentHTML = function(html) {
         setHTML('zss_editor_content', html);
-        zss_editor.focusEditor('zss_editor_content');
+        if ($('#zss_editor_title').is(":hidden")) {
+          zss_editor.focusEditor('zss_editor_content');
+        }
       }
 
       zss_editor.insertHTML = function(html) {
