@@ -6,7 +6,7 @@ import {actions, messages} from './const';
 import {Modal, View, Text, StyleSheet, TextInput,
   TouchableOpacity, Platform, PixelRatio, Keyboard, Dimensions} from 'react-native';
 
-const injectScript = `K
+const injectScript = `
   (function () {
     ${InjectedMessageHandler}
   }());
