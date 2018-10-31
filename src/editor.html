@@ -1094,8 +1094,8 @@
           newPos = futureEditorHeight - editorHeight + halfLineHeight;
         }
 
-        if (newPos) {
-          // window.scrollTo(0, newPos);
+        if (newPos && zss_editor.platform === 'ios') {
+          window.scrollTo(0, newPos);
         }
       }
 
@@ -1449,10 +1449,11 @@
           if ($('#zss_editor_title').is(":hidden")) {
             zss_editor.focusEditor('zss_editor_content');
             $('#zss_editor_content').scrollTop($('#zss_editor_content')[0].scrollHeight);
-            $('html, body').scrollTop($(document).height());
+            $('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
           }
         } else {
           zss_editor.focusEditor('zss_editor_content');
+          $('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
         }
       }
 
