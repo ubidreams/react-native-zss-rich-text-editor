@@ -402,6 +402,14 @@ export default class RichTextEditor extends Component {
   //-------------------------------------------------------------------------------
   //--------------- Public API
 
+  showKeyboard() {
+    this.webviewBridge.showKeyboard();
+  }
+
+  hideKeyboard() {
+    this.webviewBridge.hideKeyboard();
+  }
+
   showLinkDialog(optionalTitle = '', optionalUrl = '') {
     this.setState({
       linkInitialUrl: optionalUrl,
