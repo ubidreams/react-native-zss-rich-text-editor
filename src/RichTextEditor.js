@@ -158,7 +158,7 @@ export default class RichTextEditor extends Component {
 
           this.props.hiddenTitle && this.hideTitle();
           this.props.enableOnChange && this.enableOnChange();
-
+          this.showKeyboard();
           this.props.editorInitializedCallback && this.props.editorInitializedCallback();
 
           break;
@@ -183,7 +183,7 @@ export default class RichTextEditor extends Component {
           const items = message.data.items;
           this.state.selectionChangeListeners.map((listener) => {
             listener(items);
-        });
+          });
           break;
         }
         case messages.CONTENT_CHANGE: {
@@ -200,7 +200,7 @@ export default class RichTextEditor extends Component {
           const selectedText = message.data;
           this._selectedTextChangeListeners.forEach((listener) => {
             listener(selectedText);
-        });
+          });
           break;
         }
       }
@@ -216,66 +216,66 @@ export default class RichTextEditor extends Component {
 
     return (
       <Modal
-    animationType={"fade"}
-    transparent
-    visible={this.state.showLinkDialog}
-    onRequestClose={() => this.setState({showLinkDialog: false})}
-    onShow={() => this.titleTextInput.focus() }
-  >
-  <View style={styles.modal}>
-  <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-  <Text style={styles.inputTitle}>Title</Text>
-    <View style={styles.inputWrapper}>
-  <TextInput
-    ref={(r) => this.titleTextInput = r}
-    style={styles.input}
-    onChangeText={(text) => this.setState({linkTitle: text})}
-    value={this.state.linkTitle}
-    />
-    </View>
-    <Text style={[styles.inputTitle ,{marginTop: 10}]}>URL</Text>
-    <View style={styles.inputWrapper}>
-  <TextInput
-    style={styles.input}
-    onChangeText={(text) => this.setState({linkUrl: text})}
-    value={this.state.linkUrl}
-    keyboardType="url"
-    autoCapitalize="none"
-    autoCorrect={false}
-    />
-    </View>
-    {PlatformIOS && <View style={styles.lineSeparator}/>}
-    <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
-      {!PlatformIOS && <View style={{flex: 1}}/>}
-      <TouchableOpacity
-        onPress={() => this._hideLinkModal()}
-        style={buttonPlatformStyle}
-          >
-          <Text style={[styles.button, {paddingRight: 10}]}>
-        {this._upperCaseButtonTextIfNeeded('Cancel')}
-      </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-        if (this._linkIsNew()) {
-          this.insertLink(this.state.linkUrl, this.state.linkTitle);
-        } else {
-          this.updateLink(this.state.linkUrl, this.state.linkTitle);
-        }
-        this._hideLinkModal();
-      }}
-        disabled={insertUpdateDisabled}
-        style={buttonPlatformStyle}
-          >
-          <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
-        {this._upperCaseButtonTextIfNeeded(this._linkIsNew() ? 'Insert' : 'Update')}
-      </Text>
-      </TouchableOpacity>
-      </View>
-      </View>
-      </View>
+        animationType={"fade"}
+        transparent
+        visible={this.state.showLinkDialog}
+        onRequestClose={() => this.setState({showLinkDialog: false})}
+        onShow={() => this.titleTextInput.focus() }
+      >
+        <View style={styles.modal}>
+          <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
+            <Text style={styles.inputTitle}>Title</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                ref={(r) => this.titleTextInput = r}
+                style={styles.input}
+                onChangeText={(text) => this.setState({linkTitle: text})}
+                value={this.state.linkTitle}
+              />
+            </View>
+            <Text style={[styles.inputTitle ,{marginTop: 10}]}>URL</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                style={styles.input}
+                onChangeText={(text) => this.setState({linkUrl: text})}
+                value={this.state.linkUrl}
+                keyboardType="url"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            {PlatformIOS && <View style={styles.lineSeparator}/>}
+            <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
+              {!PlatformIOS && <View style={{flex: 1}}/>}
+              <TouchableOpacity
+                onPress={() => this._hideLinkModal()}
+                style={buttonPlatformStyle}
+              >
+                <Text style={[styles.button, {paddingRight: 10}]}>
+                  {this._upperCaseButtonTextIfNeeded('Cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  if (this._linkIsNew()) {
+                    this.insertLink(this.state.linkUrl, this.state.linkTitle);
+                  } else {
+                    this.updateLink(this.state.linkUrl, this.state.linkTitle);
+                  }
+                  this._hideLinkModal();
+                }}
+                disabled={insertUpdateDisabled}
+                style={buttonPlatformStyle}
+              >
+                <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
+                  {this._upperCaseButtonTextIfNeeded(this._linkIsNew() ? 'Insert' : 'Update')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
-      );
+    );
   }
 
   _renderImageModal() {
@@ -285,54 +285,54 @@ export default class RichTextEditor extends Component {
 
     return (
       <Modal
-    animationType={"fade"}
-    transparent
-    visible={this.state.showImageDialog}
-    onRequestClose={() => this.setState({showImageDialog: false})}
-    onShow={() => this.urlTextInput.focus() }
-  >
-  <View style={styles.modal}>
-  <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-  <Text style={[styles.inputTitle ,{marginTop: 10}]}>Image URL</Text>
-    <View style={styles.inputWrapper}>
-  <TextInput
-    ref={(r) => this.urlTextInput = r}
-    style={styles.input}
-    onChangeText={(text) => this.setState({imageUrl: text})}
-    value={this.state.imageUrl}
-    keyboardType="url"
-    autoCapitalize="none"
-    autoCorrect={false}
-    />
-    </View>
-    {PlatformIOS && <View style={styles.lineSeparator}/>}
-    <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
-      {!PlatformIOS && <View style={{flex: 1}}/>}
-      <TouchableOpacity
-        onPress={() => this._hideImageModal()}
-        style={buttonPlatformStyle}
-          >
-          <Text style={[styles.button, {paddingRight: 10}]}>
-        {this._upperCaseButtonTextIfNeeded('Cancel')}
-      </Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        onPress={() => {
-        this.insertImage({ src: this.state.imageUrl })
-        this._hideImageModal();
-      }}
-        disabled={insertUpdateDisabled}
-        style={buttonPlatformStyle}
-          >
-          <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
-        {this._upperCaseButtonTextIfNeeded('Insert')}
-      </Text>
-      </TouchableOpacity>
-      </View>
-      </View>
-      </View>
+        animationType={"fade"}
+        transparent
+        visible={this.state.showImageDialog}
+        onRequestClose={() => this.setState({showImageDialog: false})}
+        onShow={() => this.urlTextInput.focus() }
+      >
+        <View style={styles.modal}>
+          <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
+            <Text style={[styles.inputTitle ,{marginTop: 10}]}>Image URL</Text>
+            <View style={styles.inputWrapper}>
+              <TextInput
+                ref={(r) => this.urlTextInput = r}
+                style={styles.input}
+                onChangeText={(text) => this.setState({imageUrl: text})}
+                value={this.state.imageUrl}
+                keyboardType="url"
+                autoCapitalize="none"
+                autoCorrect={false}
+              />
+            </View>
+            {PlatformIOS && <View style={styles.lineSeparator}/>}
+            <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
+              {!PlatformIOS && <View style={{flex: 1}}/>}
+              <TouchableOpacity
+                onPress={() => this._hideImageModal()}
+                style={buttonPlatformStyle}
+              >
+                <Text style={[styles.button, {paddingRight: 10}]}>
+                  {this._upperCaseButtonTextIfNeeded('Cancel')}
+                </Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                onPress={() => {
+                  this.insertImage({ src: this.state.imageUrl })
+                  this._hideImageModal();
+                }}
+                disabled={insertUpdateDisabled}
+                style={buttonPlatformStyle}
+              >
+                <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
+                  {this._upperCaseButtonTextIfNeeded('Insert')}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
-      );
+    );
   }
 
   _hideLinkModal() {
@@ -342,6 +342,7 @@ export default class RichTextEditor extends Component {
       linkTitle: '',
       linkUrl: ''
     })
+    this.showKeyboard();
   }
 
   _hideImageModal() {
@@ -349,6 +350,7 @@ export default class RichTextEditor extends Component {
       showImageDialog: false,
       imageUrl: ''
     })
+    this.showKeyboard();
   }
 
   _linkIsNew() {
@@ -364,20 +366,20 @@ export default class RichTextEditor extends Component {
     const pageSource = PlatformIOS ? require('./editor.html') : { uri: 'file:///android_asset/editor.html' };
     return (
       <View style={{flex: 1}}>
-  <WebViewBridge
-    {...this.props}
-    hideKeyboardAccessoryView={true}
-    keyboardDisplayRequiresUserAction={false}
-    ref={(r) => {this.webviewBridge = r}}
-    onBridgeMessage={(message) => this.onBridgeMessage(message)}
-    injectedJavaScript={injectScript}
-    source={pageSource}
-    onLoad={() => this.init()}
-    />
-    {this._renderLinkModal()}
-    {this._renderImageModal()}
-  </View>
-  );
+        <WebViewBridge
+          {...this.props}
+          hideKeyboardAccessoryView={true}
+          keyboardDisplayRequiresUserAction={false}
+          ref={(r) => {this.webviewBridge = r}}
+          onBridgeMessage={(message) => this.onBridgeMessage(message)}
+          injectedJavaScript={injectScript}
+          source={pageSource}
+          onLoad={() => this.init()}
+        />
+        {this._renderLinkModal()}
+        {this._renderImageModal()}
+      </View>
+    );
   }
 
   escapeJSONString = function(string) {
@@ -403,7 +405,7 @@ export default class RichTextEditor extends Component {
   //--------------- Public API
 
   showKeyboard() {
-    this.webviewBridge.showKeyboard();
+    setTimeout(() => this.webviewBridge.showKeyboard(), 10);
   }
 
   hideKeyboard() {
@@ -437,7 +439,7 @@ export default class RichTextEditor extends Component {
   registerToolbar(listener) {
     this.setState({
       selectionChangeListeners: [...this.state.selectionChangeListeners, listener]
-  });
+    });
   }
 
   enableOnChange() {
@@ -640,57 +642,57 @@ export default class RichTextEditor extends Component {
   async getTitleHtml() {
     return new Promise((resolve, reject) => {
       this.titleResolve = resolve;
-    this.titleReject = reject;
-    this._sendAction(actions.getTitleHtml);
+      this.titleReject = reject;
+      this._sendAction(actions.getTitleHtml);
 
-    this.pendingTitleHtml = setTimeout(() => {
-      if (this.titleReject) {
-      this.titleReject('timeout')
-    }
-  }, 5000);
-  });
+      this.pendingTitleHtml = setTimeout(() => {
+        if (this.titleReject) {
+          this.titleReject('timeout')
+        }
+      }, 5000);
+    });
   }
 
   async getTitleText() {
     return new Promise((resolve, reject) => {
       this.titleTextResolve = resolve;
-    this.titleTextReject = reject;
-    this._sendAction(actions.getTitleText);
+      this.titleTextReject = reject;
+      this._sendAction(actions.getTitleText);
 
-    this.pendingTitleText = setTimeout(() => {
-      if (this.titleTextReject) {
-      this.titleTextReject('timeout');
-    }
-  }, 5000);
-  });
+      this.pendingTitleText = setTimeout(() => {
+        if (this.titleTextReject) {
+          this.titleTextReject('timeout');
+        }
+      }, 5000);
+    });
   }
 
   async getContentHtml() {
     return new Promise((resolve, reject) => {
       this.contentResolve = resolve;
-    this.contentReject = reject;
-    this._sendAction(actions.getContentHtml);
+      this.contentReject = reject;
+      this._sendAction(actions.getContentHtml);
 
-    this.pendingContentHtml = setTimeout(() => {
-      if (this.contentReject) {
-      this.contentReject('timeout')
-    }
-  }, 5000);
-  });
+      this.pendingContentHtml = setTimeout(() => {
+        if (this.contentReject) {
+          this.contentReject('timeout')
+        }
+      }, 5000);
+    });
   }
 
   async getSelectedText() {
     return new Promise((resolve, reject) => {
       this.selectedTextResolve = resolve;
-    this.selectedTextReject = reject;
-    this._sendAction(actions.getSelectedText);
+      this.selectedTextReject = reject;
+      this._sendAction(actions.getSelectedText);
 
-    this.pendingSelectedText = setTimeout(() => {
-      if (this.selectedTextReject) {
-      this.selectedTextReject('timeout')
-    }
-  }, 5000);
-  });
+      this.pendingSelectedText = setTimeout(() => {
+        if (this.selectedTextReject) {
+          this.selectedTextReject('timeout')
+        }
+      }, 5000);
+    });
   }
 
   setTitleFocusHandler(callbackHandler) {
