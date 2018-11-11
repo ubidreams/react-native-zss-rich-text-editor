@@ -212,7 +212,6 @@ export default class RichTextEditor extends Component {
   _renderLinkModal() {
     const insertUpdateDisabled = this.state.linkTitle.trim().length <= 0 || this.state.linkUrl.trim().length <= 0;
     const containerPlatformStyle = PlatformIOS ? {justifyContent: 'space-between'} : {paddingTop: 15};
-    const buttonPlatformStyle = PlatformIOS ? {flex: 1, height: 45, justifyContent: 'center'} : {};
 
     return (
       <Modal
@@ -224,18 +223,19 @@ export default class RichTextEditor extends Component {
       >
         <View style={styles.modal}>
           <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-            <Text style={styles.inputTitle}>Title</Text>
+            <Text style={styles.inputTitle}>Add Link</Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 ref={(r) => this.titleTextInput = r}
+                placeholder={'Title'}
                 style={styles.input}
                 onChangeText={(text) => this.setState({linkTitle: text})}
                 value={this.state.linkTitle}
               />
             </View>
-            <Text style={[styles.inputTitle ,{marginTop: 10}]}>URL</Text>
             <View style={styles.inputWrapper}>
               <TextInput
+                placeholder={'Paste URL'}
                 style={styles.input}
                 onChangeText={(text) => this.setState({linkUrl: text})}
                 value={this.state.linkUrl}
@@ -244,16 +244,11 @@ export default class RichTextEditor extends Component {
                 autoCorrect={false}
               />
             </View>
-            {PlatformIOS && <View style={styles.lineSeparator}/>}
-            <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
-              {!PlatformIOS && <View style={{flex: 1}}/>}
+            <View style={styles.buttonView}>
               <TouchableOpacity
                 onPress={() => this._hideLinkModal()}
-                style={buttonPlatformStyle}
               >
-                <Text style={[styles.button, {paddingRight: 10}]}>
-                  {this._upperCaseButtonTextIfNeeded('Cancel')}
-                </Text>
+                <Text style={[styles.cancelButton, {paddingRight: 10}]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -265,10 +260,9 @@ export default class RichTextEditor extends Component {
                   this._hideLinkModal();
                 }}
                 disabled={insertUpdateDisabled}
-                style={buttonPlatformStyle}
               >
-                <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
-                  {this._upperCaseButtonTextIfNeeded(this._linkIsNew() ? 'Insert' : 'Update')}
+                <Text style={[styles.submitButton, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
+                  {this._linkIsNew() ? 'Add' : 'Update'}
                 </Text>
               </TouchableOpacity>
             </View>
@@ -280,9 +274,6 @@ export default class RichTextEditor extends Component {
 
   _renderImageModal() {
     const insertUpdateDisabled = this.state.imageUrl.trim().length <= 0;
-    const containerPlatformStyle = PlatformIOS ? {justifyContent: 'space-between'} : {paddingTop: 15};
-    const buttonPlatformStyle = PlatformIOS ? {flex: 1, height: 45, justifyContent: 'center'} : {};
-
     return (
       <Modal
         animationType={"fade"}
@@ -293,7 +284,7 @@ export default class RichTextEditor extends Component {
       >
         <View style={styles.modal}>
           <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-            <Text style={[styles.inputTitle ,{marginTop: 10}]}>Image URL</Text>
+            <Text style={[styles.inputTitle ,{marginTop: 10}]}>Add Image</Text>
             <View style={styles.inputWrapper}>
               <TextInput
                 ref={(r) => this.urlTextInput = r}
@@ -305,16 +296,12 @@ export default class RichTextEditor extends Component {
                 autoCorrect={false}
               />
             </View>
-            {PlatformIOS && <View style={styles.lineSeparator}/>}
-            <View style={[{alignSelf: 'stretch', flexDirection: 'row'}, containerPlatformStyle]}>
+            <View style={styles.buttonView}>
               {!PlatformIOS && <View style={{flex: 1}}/>}
               <TouchableOpacity
                 onPress={() => this._hideImageModal()}
-                style={buttonPlatformStyle}
               >
-                <Text style={[styles.button, {paddingRight: 10}]}>
-                  {this._upperCaseButtonTextIfNeeded('Cancel')}
-                </Text>
+                <Text style={[styles.cancelButton, {paddingRight: 10}]}>Cancel</Text>
               </TouchableOpacity>
               <TouchableOpacity
                 onPress={() => {
@@ -322,11 +309,8 @@ export default class RichTextEditor extends Component {
                   this._hideImageModal();
                 }}
                 disabled={insertUpdateDisabled}
-                style={buttonPlatformStyle}
               >
-                <Text style={[styles.button, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>
-                  {this._upperCaseButtonTextIfNeeded('Insert')}
-                </Text>
+                <Text style={[styles.submitButton, {opacity: insertUpdateDisabled ? 0.5 : 1}]}>Add</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -355,10 +339,6 @@ export default class RichTextEditor extends Component {
 
   _linkIsNew() {
     return !this.state.linkInitialUrl;
-  }
-
-  _upperCaseButtonTextIfNeeded(buttonText) {
-    return PlatformIOS ? buttonText : buttonText.toUpperCase();
   }
 
   render() {
@@ -718,32 +698,50 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.5)'
   },
   innerModal: {
-    backgroundColor: 'rgba(255, 255, 255, 0.9)',
+    width: '90%',
+    backgroundColor: 'white',
     paddingTop: 20,
     paddingBottom: PlatformIOS ? 0 : 20,
     paddingLeft: 20,
     paddingRight: 20,
-    alignSelf: 'stretch',
+    alignSelf: 'center',
     margin: 40,
-    borderRadius: PlatformIOS ? 8 : 2
+    borderRadius: 15,
   },
-  button: {
+  buttonView: {
+    flexDirection: 'row',
+    alignSelf: 'flex-end',
+    paddingTop: 15,
+    paddingBottom: 15},
+  submitButton: {
+    fontFamily: 'ITCAvantGardePro-Bold',
     fontSize: 16,
-    color: '#4a4a4a',
-    textAlign: 'center'
+    color: '#0d74cf',
+    textAlign: 'center',
+    margin: 8,
+  },
+  cancelButton: {
+    fontFamily: 'ITCAvantGardePro-Bk',
+    fontSize: 16,
+    color: '#0d74cf',
+    textAlign: 'center',
+    margin: 8,
   },
   inputWrapper: {
     marginTop: 5,
     marginBottom: 10,
-    borderBottomColor: '#4a4a4a',
-    borderBottomWidth: PlatformIOS ? 1 / PixelRatio.get() : 0
+    borderBottomColor: '#0d74cf',
+    borderBottomWidth: PlatformIOS ? 2 / PixelRatio.get() : 0
   },
   inputTitle: {
-    color: '#4a4a4a'
+    color: '#1d2933',
+    fontFamily: 'ITCAvantGardePro-Md',
+    fontSize: 22,
   },
   input: {
-    height: PlatformIOS ? 20 : 40,
-    paddingTop: 0
+    fontFamily: 'ITCAvantGardePro-Md',
+    height: 50,
+    paddingTop: 0,
   },
   lineSeparator: {
     height: 1 / PixelRatio.get(),
