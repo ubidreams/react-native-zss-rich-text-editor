@@ -1414,8 +1414,8 @@
       }
 
       zss_editor.toggleTitle = function() {
+        $('#zss_editor_title_container').toggle();
         $('#zss_editor_title').toggle();
-        $('#separatorContainer').toggle();
       }
 
       zss_editor.enableOnChange = function() {
@@ -1435,18 +1435,18 @@
 
       zss_editor.hideTitle = function() {
         $('#zss_editor_title').hide();
-        $('#separatorContainer').hide();
+        $('#zss_editor_title_container').hide();
       }
 
       zss_editor.showTitle = function() {
         $('#zss_editor_title').show();
-        $('#separatorContainer').show();
+        $('#zss_editor_title_container').show();
       }
 
       zss_editor.setContentHTML = function(html) {
         setHTML('zss_editor_content', html);
         if (zss_editor.platform ==='ios') {
-          if ($('#zss_editor_title').is(":hidden")) {
+          if ($('#zss_editor_title_container').is(":hidden")) {
             zss_editor.focusEditor('zss_editor_content');
             $('#zss_editor_content').scrollTop($('#zss_editor_content')[0].scrollHeight);
             $('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
@@ -1705,21 +1705,15 @@
             margin: 0;
             font-family: Arial, Helvetica, sans-serif;
             font-size:1em;
-            color:#2d4150;
+            color:#4a545c;
         }
 
         body {
-            padding-left:10px;
-            padding-right:10px;
             padding-top: 0px;
             padding-bottom: 0px;
             overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
             height: 100%;
-        }
-
-        img.zs_active {
-            /*border: 2px dashed #000;*/
         }
 
         img {
@@ -1743,20 +1737,17 @@
             padding-bottom: 20px;
         }
 
-        #zss_editor_content {
+        /* TODO: support editor styles configuration via props */
+        div.zss_editor_title_container {
+          border-bottom: 2px solid #0d74cf;
+          margin-bottom: 23px;
+          padding-bottom: 10px;
         }
 
         div.zss_editor_title {
             font-family: Arial, Helvetica, sans-serif;
-            font-size: 23px;
-            line-height: 31px;
-            color: #2d4150;
+            color: #4a545c;
             display: none;
-        }
-
-        #zss_editor_title {
-            padding-left: 10px;
-            padding-right: 10px;
         }
 
         [placeholder]:empty:before {
@@ -1768,19 +1759,6 @@
             content: attr(placeholder);
             color: #e0e0e0;
         }
-
-        hr {
-            border: none;
-            height: 1px;
-            background-color: #e7e7e7;
-        }
-
-        #separatorContainer {
-            -webkit-user-select: none;
-            padding-left: 10px;
-            padding-right: 10px;
-            display: none;
-        }
     </style>
 
     <style type="text/css">
@@ -1791,8 +1769,8 @@
 
 <body>
 <!-- ZSSRichTextEditor Editable Content -->
-<div id="zss_editor_title" class="zss_editor_title" contenteditable="true" placeholder="" disableLineBreaks="true"></div>
-<div id="separatorContainer"><hr></div>
+<div id="zss_editor_title_container" class="zss_editor_title_container">
+<div id="zss_editor_title" class="zss_editor_title" contenteditable="true" placeholder="" disableLineBreaks="true"></div></div>
 <div id="zss_editor_content" class="zss_editor_content" contenteditable="true" placeholder=""></div>
 <div id="zss_editor_footer"></div>
 </body>

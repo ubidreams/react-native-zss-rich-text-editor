@@ -48,7 +48,9 @@ export default class RichTextEditor extends Component {
       showImageDialog: false,
       linkInitialUrl: '',
       linkTitle: '',
+      linkTitleFocused: false,
       linkUrl: '',
+      linkUrlFocused: false,
       imageUrl: '',
       keyboardHeight: 0
     };
@@ -209,6 +211,7 @@ export default class RichTextEditor extends Component {
     }
   }
 
+  // TODO: Refactor generalized embed modal and accommodate configuration via props
   _renderLinkModal() {
     const insertUpdateDisabled = this.state.linkTitle.trim().length <= 0 || this.state.linkUrl.trim().length <= 0;
     const containerPlatformStyle = PlatformIOS ? {justifyContent: 'space-between'} : {paddingTop: 15};
@@ -223,26 +226,34 @@ export default class RichTextEditor extends Component {
       >
         <View style={styles.modal}>
           <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-            <Text style={styles.inputTitle}>Add Link</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                ref={(r) => this.titleTextInput = r}
-                placeholder={'Title'}
-                style={styles.input}
-                onChangeText={(text) => this.setState({linkTitle: text})}
-                value={this.state.linkTitle}
-              />
-            </View>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                placeholder={'Paste URL'}
-                style={styles.input}
-                onChangeText={(text) => this.setState({linkUrl: text})}
-                value={this.state.linkUrl}
-                keyboardType="url"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+            <View style={{ paddingLeft: 20, paddingRight: 30 }}>
+              <Text style={styles.inputTitle}>Add Link</Text>
+              <View style={[styles.inputWrapper, this.state.linkTitleFocused ? {} : { borderBottomColor: '#e8e9ea' }]}>
+                <TextInput
+                  ref={(r) => this.titleTextInput = r}
+                  placeholder={'Title'}
+                  placeholderTextColor={'#4a545c'}
+                  style={styles.input}
+                  onBlur={() => this.setState({linkTitleFocused: false})}
+                  onChangeText={(text) => this.setState({linkTitle: text})}
+                  onFocus={() => this.setState({linkTitleFocused: true})}
+                  value={this.state.linkTitle}
+                />
+              </View>
+              <View style={[styles.inputWrapper, this.state.linkUrlFocused ? {} : { borderBottomColor: '#e8e9ea' }]}>
+                <TextInput
+                  placeholder={'Paste URL'}
+                  placeholderTextColor={'#4a545c'}
+                  style={styles.input}
+                  onBlur={() => this.setState({linkUrlFocused: false})}
+                  onChangeText={(text) => this.setState({linkUrl: text})}
+                  onFocus={() => this.setState({linkUrlFocused: true})}
+                  value={this.state.linkUrl}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
             </View>
             <View style={styles.buttonView}>
               <TouchableOpacity
@@ -272,6 +283,7 @@ export default class RichTextEditor extends Component {
     );
   }
 
+  // TODO: Refactor generalized embed modal and accommodate configuration via props
   _renderImageModal() {
     const insertUpdateDisabled = this.state.imageUrl.trim().length <= 0;
     return (
@@ -284,17 +296,19 @@ export default class RichTextEditor extends Component {
       >
         <View style={styles.modal}>
           <View style={[styles.innerModal, {marginBottom: PlatformIOS ? this.state.keyboardHeight : 0}]}>
-            <Text style={[styles.inputTitle ,{marginTop: 10}]}>Add Image</Text>
-            <View style={styles.inputWrapper}>
-              <TextInput
-                ref={(r) => this.urlTextInput = r}
-                style={styles.input}
-                onChangeText={(text) => this.setState({imageUrl: text})}
-                value={this.state.imageUrl}
-                keyboardType="url"
-                autoCapitalize="none"
-                autoCorrect={false}
-              />
+            <View style={{ paddingLeft: 20, paddingRight: 30 }}>
+              <Text style={[styles.inputTitle ,{marginTop: 10}]}>Add Image</Text>
+              <View style={styles.inputWrapper}>
+                <TextInput
+                  ref={(r) => this.urlTextInput = r}
+                  style={styles.input}
+                  onChangeText={(text) => this.setState({imageUrl: text})}
+                  value={this.state.imageUrl}
+                  keyboardType="url"
+                  autoCapitalize="none"
+                  autoCorrect={false}
+                />
+              </View>
             </View>
             <View style={styles.buttonView}>
               {!PlatformIOS && <View style={{flex: 1}}/>}
@@ -695,53 +709,63 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: 'rgba(0, 0, 0, 0.5)'
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
   },
   innerModal: {
-    width: '90%',
+    width: '88%',
     backgroundColor: 'white',
-    paddingTop: 20,
-    paddingBottom: PlatformIOS ? 0 : 20,
-    paddingLeft: 20,
-    paddingRight: 20,
+    paddingTop: 26,
+    paddingBottom: 15,
     alignSelf: 'center',
-    margin: 40,
     borderRadius: 15,
   },
-  buttonView: {
+  buttonView: { // TODO: accommodate buttonViewStyle prop for setting this
+    borderTopColor: '#f3f4f5',
+    borderTopWidth: 2,
     flexDirection: 'row',
+    justifyContent: 'flex-end',
     alignSelf: 'flex-end',
+    paddingLeft: 20,
+    paddingRight: 30,
     paddingTop: 15,
-    paddingBottom: 15},
-  submitButton: {
-    fontFamily: 'ITCAvantGardePro-Bold',
-    fontSize: 16,
-    color: '#0d74cf',
-    textAlign: 'center',
-    margin: 8,
+    marginTop: 27,
+    width: '100%',
   },
-  cancelButton: {
-    fontFamily: 'ITCAvantGardePro-Bk',
-    fontSize: 16,
+  submitButton: { // TODO: accommodate buttonStyle prop for setting this
+    fontFamily: 'YahooSans-Bold',
     color: '#0d74cf',
     textAlign: 'center',
-    margin: 8,
+    marginVertical: 4,
+    marginLeft: 13,
+  },
+  cancelButton: { // TODO: accommodate buttonStyle prop for setting this
+    fontFamily: 'YahooSans-Regular',
+    color: '#0d74cf',
+    textAlign: 'center',
+    marginVertical: 4,
+    marginHorizontal: 13,
   },
   inputWrapper: {
     marginTop: 5,
-    marginBottom: 10,
-    borderBottomColor: '#0d74cf',
-    borderBottomWidth: PlatformIOS ? 2 / PixelRatio.get() : 0
+    marginBottom: 5,
+    borderBottomColor: '#0d74cf', // TODO: accommodate inputTextColor prop for setting this
+    borderBottomWidth: 2,
   },
   inputTitle: {
-    color: '#1d2933',
-    fontFamily: 'ITCAvantGardePro-Md',
-    fontSize: 22,
+    color: '#1d2933', // TODO: accommodate inputTextColor prop for setting this
+    fontFamily: 'YahooSans-ExtraBold', // TODO: accommodate inputText prop for setting this
+    fontSize: 17,
+    lineHeight: 22,
+    marginBottom: 8,
   },
   input: {
-    fontFamily: 'ITCAvantGardePro-Md',
-    height: 50,
-    paddingTop: 0,
+    fontFamily: 'YahooSans-Regular', // TODO: accommodate inputTextColor prop for setting this
+    height: 43,
+    marginLeft: 0,
+    marginRight: 0,
+    paddingTop: 8,
+    paddingLeft: 0,
+    paddingRight: 0,
   },
   lineSeparator: {
     height: 1 / PixelRatio.get(),
