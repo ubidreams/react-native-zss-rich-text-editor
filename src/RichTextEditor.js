@@ -303,6 +303,8 @@ export default class RichTextEditor extends Component {
                   ref={(r) => this.urlTextInput = r}
                   style={styles.input}
                   onChangeText={(text) => this.setState({imageUrl: text})}
+                  placeholder={'Paste URL'}
+                  placeholderTextColor={'#4a545c'}
                   value={this.state.imageUrl}
                   keyboardType="url"
                   autoCapitalize="none"
