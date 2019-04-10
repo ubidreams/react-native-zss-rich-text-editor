@@ -45,8 +45,9 @@ export default class RichTextToolbar extends Component {
     this.state = {
       editor: undefined,
       selectedItems: [],
+      params: {},
       actions,
-      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.getRows(actions, []))
+      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.getRows(actions, [], {}))
     };
   }
 
@@ -54,12 +55,18 @@ export default class RichTextToolbar extends Component {
     const actions = newProps.actions ? newProps.actions : defaultActions;
     this.setState({
       actions,
-      ds: this.state.ds.cloneWithRows(this.getRows(actions, this.state.selectedItems))
+      ds: this.state.ds.cloneWithRows(this.getRows(actions, this.state.selectedItems, this.state.params))
     });
   }
 
-  getRows(actions, selectedItems) {
-    return actions.map((action) => {return {action, selected: selectedItems.includes(action)};});
+  getRows(actions, selectedItems, params) {
+    return actions.map((action) => {
+      return {
+        action,
+        selectedItems,
+        params
+      };
+    });
   }
 
   componentDidMount() {
@@ -67,16 +74,17 @@ export default class RichTextToolbar extends Component {
     if (!editor) {
       throw new Error('Toolbar has no editor!');
     } else {
-      editor.registerToolbar((selectedItems) => this.setSelectedItems(selectedItems));
+      editor.registerToolbar((selectedItems, params) => this.setSelectedItems(selectedItems, params));
       this.setState({editor});
     }
   }
 
-  setSelectedItems(selectedItems) {
-    if (selectedItems !== this.state.selectedItems) {
+  setSelectedItems(selectedItems, params) {
+    if (selectedItems !== this.state.selectedItems || params !== this.state.params) {
       this.setState({
         selectedItems,
-        ds: this.state.ds.cloneWithRows(this.getRows(this.state.actions, selectedItems))
+        params: params,
+        ds: this.state.ds.cloneWithRows(this.getRows(this.state.actions, selectedItems, params))
       });
     }
   }
@@ -115,10 +123,10 @@ export default class RichTextToolbar extends Component {
     );
   }
 
-  _renderAction(action, selected) {
-    return this.props.renderAction ?
-        this.props.renderAction(action, selected) :
-        this._defaultRenderAction(action, selected);
+  _renderAction(action, selectedItems, params) {
+    return this.props.renderAction
+        ? this.props.renderAction(action, selectedItems, params)
+        : this._defaultRenderAction(action, selectedItems.includes(action));
   }
 
   render() {
@@ -130,7 +138,7 @@ export default class RichTextToolbar extends Component {
             horizontal
             contentContainerStyle={{flexDirection: 'row'}}
             dataSource={this.state.ds}
-            renderRow= {(row) => this._renderAction(row.action, row.selected)}
+            renderRow= {(row) => this._renderAction(row.action, row.selectedItems, row.params)}
         />
       </View>
     );

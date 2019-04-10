@@ -1522,6 +1522,7 @@
 
         console.log('enabledEditingItems');
         var items = [];
+        var params = {};
         if (zss_editor.isCommandEnabled('bold')) {
           items.push('bold');
         }
@@ -1583,11 +1584,13 @@
           var bgColor = t.css('backgroundColor');
           if (bgColor.length != 0 && bgColor != 'rgba(0, 0, 0, 0)' && bgColor != 'rgb(0, 0, 0)' && bgColor != 'transparent') {
             items.push('backgroundColor');
+            params['backgroundColor'] = [bgColor];
           }
           // Text Color
           var textColor = t.css('color');
           if (textColor.length != 0 && textColor != 'rgba(0, 0, 0, 0)' && textColor != 'rgb(0, 0, 0)' && textColor != 'transparent') {
             items.push('textColor');
+            params['textColor'] = [textColor];
           }
 
           //Fonts
@@ -1615,12 +1618,12 @@
 
         }
 
-        notifyIfSelectionHasChanged(items);
+        notifyIfSelectionHasChanged(items, params);
       }
 
-      function notifyIfSelectionHasChanged(items) {
+      function notifyIfSelectionHasChanged(items, params) {
         var selectionChangeMessage = JSON.stringify({
-          data: {items: items},
+          data: {items: items, params: params},
           type: 'SELECTION_CHANGE'
         });
 

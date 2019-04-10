@@ -183,8 +183,9 @@ export default class RichTextEditor extends Component {
           break;
         case messages.SELECTION_CHANGE: {
           const items = message.data.items;
+          const params = message.data.params;
           this.state.selectionChangeListeners.map((listener) => {
-            listener(items);
+            listener(items, params);
           });
           break;
         }
