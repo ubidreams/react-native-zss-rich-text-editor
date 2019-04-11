@@ -874,7 +874,6 @@
       }
 
       zss_editor.init = function() {
-
         disableLineBreakIfNecessary('zss_editor_title');
         disableLineBreakIfNecessary('zss_editor_content');
 
@@ -885,7 +884,6 @@
         clearHtmlIfTextIsEmpty('zss_editor_content');
 
         $(document).on('selectionchange',function(e){
-          console.log('selectionchange');
           zss_editor.calculateEditorHeightWithCaretPosition();
           zss_editor.setScrollPosition();
           zss_editor.enabledEditingItems(e);
@@ -1445,16 +1443,6 @@
 
       zss_editor.setContentHTML = function(html) {
         setHTML('zss_editor_content', html);
-        if (zss_editor.platform ==='ios') {
-          if ($('#zss_editor_title_container').is(":hidden")) {
-            zss_editor.focusEditor('zss_editor_content');
-            $('#zss_editor_content').scrollTop($('#zss_editor_content')[0].scrollHeight);
-            $('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
-          }
-        } else {
-          zss_editor.focusEditor('zss_editor_content');
-          $('html,body').animate({scrollTop: document.body.scrollHeight}, "fast");
-        }
       }
 
       zss_editor.insertHTML = function(html) {

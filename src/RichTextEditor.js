@@ -160,7 +160,6 @@ export default class RichTextEditor extends Component {
 
           this.props.hiddenTitle && this.hideTitle();
           this.props.enableOnChange && this.enableOnChange();
-          this.showKeyboard();
           this.props.editorInitializedCallback && this.props.editorInitializedCallback();
 
           break;
