@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {ListView, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
+import {FlatList, View, TouchableOpacity, Image, StyleSheet} from 'react-native';
 import {actions} from './const';
 
 const defaultActions = [
@@ -47,16 +47,8 @@ export default class RichTextToolbar extends Component {
       selectedItems: [],
       params: {},
       actions,
-      ds: new ListView.DataSource({rowHasChanged: (r1, r2) => r1 !== r2}).cloneWithRows(this.getRows(actions, [], {}))
+      dataSet: this.getRows(actions, [], {})
     };
-  }
-
-  componentDidReceiveProps(newProps) {
-    const actions = newProps.actions ? newProps.actions : defaultActions;
-    this.setState({
-      actions,
-      ds: this.state.ds.cloneWithRows(this.getRows(actions, this.state.selectedItems, this.state.params))
-    });
   }
 
   getRows(actions, selectedItems, params) {
@@ -84,7 +76,7 @@ export default class RichTextToolbar extends Component {
       this.setState({
         selectedItems,
         params: params,
-        ds: this.state.ds.cloneWithRows(this.getRows(this.state.actions, selectedItems, params))
+        dataSet: this.getRows(this.state.actions, selectedItems, params)
       });
     }
   }
@@ -134,11 +126,12 @@ export default class RichTextToolbar extends Component {
       <View
           style={[{height: 50, backgroundColor: '#D3D3D3', alignItems: 'center'}, this.props.style]}
       >
-        <ListView
+        <FlatList
             horizontal
             contentContainerStyle={{flexDirection: 'row'}}
-            dataSource={this.state.ds}
-            renderRow= {(row) => this._renderAction(row.action, row.selectedItems, row.params)}
+            data={this.state.dataSet}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => this._renderAction(item.action, item.selectedItems, item.params)}
         />
       </View>
     );
@@ -186,7 +179,6 @@ export default class RichTextToolbar extends Component {
         if(this.props.onPressAddImage) {
           this.props.onPressAddImage();
         }
-        break;
         break;
     }
   }
