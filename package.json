@@ -9,10 +9,10 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "react-native-webview-bridge-updated": "https://github.com/GrioSF/react-native-webview-bridge.git"
+    "react-native-webview": "^8.0.1"
   },
   "peerDependencies": {
     "react": "*",
-    "react-native": ">=0.31.0"
+    "react-native": ">=0.59.10"
   }
 }
