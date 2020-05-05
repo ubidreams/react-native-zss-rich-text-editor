@@ -1700,11 +1700,15 @@
         }
 
         body {
-            padding-top: 0px;
-            padding-bottom: 0px;
+            padding: 20px;
             overflow-y: scroll;
             -webkit-overflow-scrolling: touch;
             height: 100%;
+        }
+
+        p { 
+          padding: 0; 
+          margin: 0;
         }
 
         img {
@@ -1733,12 +1737,12 @@
           border-bottom: 2px solid #0d74cf;
           margin-bottom: 23px;
           padding-bottom: 10px;
+          display: none;
         }
 
         div.zss_editor_title {
             font-family: Arial, Helvetica, sans-serif;
             color: #4a545c;
-            display: none;
         }
 
         [placeholder]:empty:before {
